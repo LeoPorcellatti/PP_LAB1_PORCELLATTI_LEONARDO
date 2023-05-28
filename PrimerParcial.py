@@ -174,7 +174,7 @@ def exportar_jugador_csv(jugador:dict):
     path = "PP_LAB1_PORCELLATTI_LEONARDO\PP_LAB1_PORCELLATTI_LEONARDO\dt.csv"
     columnas = []
     for clave in jugador:
-        if clave != "logros" and clave not in columnas:
+        if clave != "logros" and clave != "estadisticas" and clave not in columnas:
             columnas.append(clave)
 
     estadisticas = jugador['estadisticas']
