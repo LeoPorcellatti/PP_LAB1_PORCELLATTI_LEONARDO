@@ -2,12 +2,8 @@ import re
 import json
 import csv
 
-# def leer_archivos_json (path:str, modo:str, encodning:str):
-#     '''
-    
-#     '''
-    
-with open("C:\\Users\\user\\Desktop\\Programación\\Examen\\PP_LAB1_PORCELLATTI_LEONARDO\\PP_LAB1_PORCELLATTI_LEONARDO\\dt.json", "r", encoding = "utf-8") as archivo:
+# path original "PP_LAB1_PORCELLATTI_LEONARDO\PP_LAB1_PORCELLATTI_LEONARDO\dt.json"
+with open("dt.json", "r", encoding = "utf-8") as archivo:
     data_nba = json.load(archivo,)
 
 lista_nba = data_nba["jugadores"]
