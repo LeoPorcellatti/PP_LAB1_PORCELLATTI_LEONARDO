@@ -670,10 +670,28 @@ def mejor_jugador_estadistica(lista:list):
 
 # PUNTO 27
 
-def mayor_estadisticas(lista:list):
+def mejores_estadisticas(lista:list):
     '''
-    Recibe la lista de jugadores y muestra quien es el que mejores estadisticas tiene
+    Recibe la lista de Jugadores y muestra quien es el jugador con mejores estadísticas
+
+    Parámetros:
+    lista: list - Lista de jugadores.
     '''
+    
+    mejores_estadisticas = 0
+    mejor_jugador = lista[0]
+
+    for jugador in lista:
+        suma = 0
+        if 'estadisticas' in jugador:
+            estadisticas = jugador['estadisticas']
+            for clave, valor in estadisticas.items():
+                suma += valor
+                promedio_estadisticas = suma / len(jugador['estadisticas'])
+                if promedio_estadisticas > mejores_estadisticas:
+                    mejor_jugador = jugador
+                    mejores_estadisticas = promedio_estadisticas
+    print(f"El mejor jugador es {mejor_jugador['nombre']} con {round(mejores_estadisticas,2)} puntos de estadísticas")
 
 
 
@@ -735,6 +753,7 @@ def parcial_app(lista_nba:list):
             "24- Extra 1!", 
             "25- Extra 2!",
             "26- Extra 3!",
+            "27- Extra 4!",
             "0- Salir"]            
     menu = "\n".join(lista_menu) 
     jugador_seleccionado = None 
@@ -822,6 +841,8 @@ def parcial_app(lista_nba:list):
                 cantidad_allstars(lista_nba)
             case 26:
                 mejor_jugador_estadistica(lista_nba)
+            case 27:
+                mejores_estadisticas(lista_nba)
             case 0:
                 print("Adios...")
                 break
