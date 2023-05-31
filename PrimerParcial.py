@@ -1,3 +1,4 @@
+from posixpath import split
 import re 
 import json
 import csv
@@ -596,6 +597,85 @@ def exportar_ranking_csv (lista:list, posiciones:dict, columnas:list):
             ]
             writer.writerow([nombre_jugador] + valores)
 
+# PUNTO 24 
+def contador_posiciones(lista:list, dato:str):
+    '''
+    Recibe una lista de jugadores e indica la cantida de jugadores por posicion que encontramos
+
+    Parametro:
+    lista:list
+    dato:str
+    '''
+    posiciones = {}
+    for jugador in lista:
+        if dato in jugador:
+            posicion = jugador[dato]
+            if posicion not in posiciones:
+                posiciones[posicion] = 1
+            else:
+                posiciones[posicion] +=1
+    for clave, valor in posiciones.items():
+        dato_valor = f'{dato} {clave}: {valor}'
+        imprimir_dato(dato_valor)
+
+# PUNTO 25
+def cantidad_allstars(lista:list): # NO FUNCIONA 
+    '''
+    Recibe la lista de jugadores y ordena de mayor a menor la cantidad de apariciones en allstars
+
+    Parametro:
+    lista:list
+    '''
+    
+    for jugador in lista:
+            if 'logros' in jugador:
+                logros = jugador['logros']
+                logro = convertir_lista_str(logros)
+                lineas = logro.split("\n")  
+                for linea in lineas:                
+                    if re.search(r'\bAll-stars\b', linea):
+                        numero_allstars = re.search(r'^[0-9]+$', linea)
+                        if numero_allstars:
+                            cantidad_allstars = convertir_str_int_float(numero_allstars.group())           
+                            orden = 'descendente'
+                            orden_allstars = quick_sort(lista, jugador[cantidad_allstars], orden)
+                            for jugador in orden_allstars:
+                                nombre_y_allstars = f"Jugador: {jugador['nombre']} - Cantidad Allstars: {cantidad_allstars}"
+                                print (nombre_y_allstars)
+  
+
+# PUNTO 26
+def mejor_jugador_estadistica(lista:list):
+    '''
+    Recibe la lista de jugadores y devuelve el mejor jugador por estadística junto con su valor
+
+    Parametro:
+    lista:list
+    '''
+    mejores_estadisticas = {}
+
+    for jugador in lista:
+        if 'estadisticas' in jugador:
+            estadisticas = jugador['estadisticas']
+            for estadistica, valor in estadisticas.items():
+                if estadistica not in mejores_estadisticas or valor > mejores_estadisticas[estadistica][0]:
+                    mejores_estadisticas[estadistica] = (valor, jugador['nombre'])
+
+    for estadistica, (valor, jugador) in mejores_estadisticas.items():
+        estadistica_modificada = replace_guion_bajo(estadistica)
+        print(f"Mayor cantidad de {estadistica_modificada}: {jugador} ({valor})")
+
+
+    
+
+# PUNTO 27
+
+def mayor_estadisticas(lista:list):
+    '''
+    Recibe la lista de jugadores y muestra quien es el que mejores estadisticas tiene
+    '''
+
+
 
 
 # MENU Y VALIDACIÓN OPCIONES
@@ -614,7 +694,7 @@ def validar_opcion(menu:str)->str:
     imprimir_dato(menu)
     opcion = input("Ingrese el ejercicio que desea ejecutar: ")
     # uso re.match para ver si es una opción esta entra 0-9 "O" 10-19 "O" 20-23
-    if re.match(r'^([0-9]|1[0-9]|20|23)$', opcion):
+    if re.match(r'^([0-9]|1[0-9]|20|2[3-7])$', opcion):
         return int(opcion)
     else:
         return -1
@@ -652,6 +732,9 @@ def parcial_app(lista_nba:list):
             "19- Calcular y mostrar el jugador con la mayor cantidad de temporadas jugadas",
             "20- Permitir al usuario ingresar un valor y mostrar los jugadores, ordenados por posición en la cancha, que hayan tenido un porcentaje de tiros de campo superior a ese valor",
             "23- BONUS!",
+            "24- Extra 1!", 
+            "25- Extra 2!",
+            "26- Extra 3!",
             "0- Salir"]            
     menu = "\n".join(lista_menu) 
     jugador_seleccionado = None 
@@ -732,7 +815,13 @@ def parcial_app(lista_nba:list):
                 parametro_cuatro = "robos_totales"
                 lista, posiciones, columnas = generar_ranking(lista_nba, parametro_uno, parametro_dos, parametro_tres, parametro_cuatro)
                 exportar_ranking_csv(lista, posiciones, columnas)
-
+            case 24:
+                dato = "posicion"
+                contador_posiciones(lista_nba, dato)
+            case 25:
+                cantidad_allstars(lista_nba)
+            case 26:
+                mejor_jugador_estadistica(lista_nba)
             case 0:
                 print("Adios...")
                 break
@@ -740,3 +829,4 @@ def parcial_app(lista_nba:list):
                 print("Opción invalida")
 
 parcial_app(lista_nba)
+
