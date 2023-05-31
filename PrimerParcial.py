@@ -619,30 +619,20 @@ def contador_posiciones(lista:list, dato:str):
         imprimir_dato(dato_valor)
 
 # PUNTO 25
-def cantidad_allstars(lista:list): # NO FUNCIONA 
-    '''
-    Recibe la lista de jugadores y ordena de mayor a menor la cantidad de apariciones en allstars
 
-    Parametro:
-    lista:list
-    '''
-    
-    for jugador in lista:
-            if 'logros' in jugador:
-                logros = jugador['logros']
-                logro = convertir_lista_str(logros)
-                lineas = logro.split("\n")  
-                for linea in lineas:                
-                    if re.search(r'\bAll-stars\b', linea):
-                        numero_allstars = re.search(r'^[0-9]+$', linea)
-                        if numero_allstars:
-                            cantidad_allstars = convertir_str_int_float(numero_allstars.group())           
-                            orden = 'descendente'
-                            orden_allstars = quick_sort(lista, jugador[cantidad_allstars], orden)
-                            for jugador in orden_allstars:
-                                nombre_y_allstars = f"Jugador: {jugador['nombre']} - Cantidad Allstars: {cantidad_allstars}"
-                                print (nombre_y_allstars)
-  
+def obtener_cantidad_all_star(jugador: dict):
+    for logro in jugador["logros"]:
+        if "All-Star" in logro:
+            cantidad_all_star = int(logro.split(" ")[0])
+            return cantidad_all_star
+    return 0
+
+def mostrar_all_star_jugadores(lista_jugadores: list):
+    lista_jugadores_ordenados = sorted(lista_jugadores, key=obtener_cantidad_all_star, reverse=True)
+    for jugador in lista_jugadores_ordenados:
+        cantidad_all_star = obtener_cantidad_all_star(jugador)
+        print("{0} ({1} veces All-Star)".format(jugador["nombre"], cantidad_all_star))
+
 
 # PUNTO 26
 def mejor_jugador_estadistica(lista:list):
@@ -691,8 +681,7 @@ def mejores_estadisticas(lista:list):
                 if promedio_estadisticas > mejores_estadisticas:
                     mejor_jugador = jugador
                     mejores_estadisticas = promedio_estadisticas
-    print(f"El mejor jugador es {mejor_jugador['nombre']} con {round(mejores_estadisticas,2)} puntos de estadísticas")
-
+    print(f"El mejor jugador es {mejor_jugador['nombre']} con {round(mejores_estadisticas,2)} puntos de estadísticas total")
 
 
 
@@ -838,7 +827,7 @@ def parcial_app(lista_nba:list):
                 dato = "posicion"
                 contador_posiciones(lista_nba, dato)
             case 25:
-                cantidad_allstars(lista_nba)
+                mostrar_all_star_jugadores(lista_nba)
             case 26:
                 mejor_jugador_estadistica(lista_nba)
             case 27:
